@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.shortcuts import render, redirect
 from fake_db import users
+from todo_list import views
 
 def index(request):
     return redirect('/users/')
@@ -26,10 +27,11 @@ def user_list(request):
 def user_info(request, user_id):
     return render(request, 'user_info.html', {'user':next((user for user in users if user['id'] == user_id), None)} )
     # return render(request, 'user_info.html', {'user':users[user_id-1]} )
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
     path('users/', user_list),
     path('users/<int:user_id>/', user_info),
+    path('todo/', views.todo_list),
+    path('todo/<int:todo_id>/', views.todo_info),
 ]
