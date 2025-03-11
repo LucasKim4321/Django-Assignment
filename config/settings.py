@@ -37,11 +37,12 @@ DJANGO_APPS = [
 ]
 
 OWNER_APPS = [
-    'todo_list'
+    'todo_list',
+    'member',
 ]
 
 THIRD_PARTY_APPS = [
-    'django_extensions'
+    'django_extensions',
 ]
 
 # Application definition
@@ -62,8 +63,9 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR/'templates'],
-        'APP_DIRS': True,
+        # DIRS, APP_DIRS 둘 다 적용됨. 각 폴더에 같은 이름의 파일이 존재 할 시  DIR경로에 있는 파일이 우선순위가 높음.
+        'DIRS': [BASE_DIR/'templates'], # templates 경로 수동으로 지정, 우선순위가 높음
+        'APP_DIRS': True, # app/templates 경로가 존재할 시 자동 활성화
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -130,3 +132,14 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# 장고 기본 로그인 기능 이용
+# LOGIN_URL = '/accounts/login/'
+# 따로 만든 로그인 기능 이용
+LOGIN_URL = '/login/'
+
+# login 성공시 url 설정
+LOGIN_REDIRECT_URL = '/'
+# logout 성공시 url 설정
+LOGOUT_REDIRECT_URL = '/'

@@ -15,13 +15,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.shortcuts import render, redirect
 from fake_db import users
-from todo_list import views
+from todo_list import views as todo_views
+from member import views as member_views
 
 def index(request):
-    return redirect('/users/')
+    return redirect('/todo/')
 def user_list(request):
     return render(request, 'user_list.html', {'users':users})
 def user_info(request, user_id):
@@ -29,9 +30,12 @@ def user_info(request, user_id):
     # return render(request, 'user_info.html', {'user':users[user_id-1]} )
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index),
-    path('users/', user_list),
-    path('users/<int:user_id>/', user_info),
-    path('todo/', views.todo_list),
-    path('todo/<int:todo_id>/', views.todo_info),
+    path('', index, name = 'index'),
+    path('users/', user_list, name = 'user_list'),
+    path('users/<int:user_id>/', user_info, name = 'user_info'),
+    path('todo/', todo_views.todo_list, name = 'todo_list'),
+    path('todo/<int:todo_id>/', todo_views.todo_info, name = 'todo_info'),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('signup/', member_views.sign_up, name = 'signup'),
+    path('login/', member_views.login, name = 'login')
 ]

@@ -12,6 +12,18 @@
 </head>
 <body>
     <div class="container">
+        <div style="text-align: right">
+            {% if request.user.is_authenticated %}
+            <form action="{% url 'logout' %}" method="POST" style="display:inline">
+                {% csrf_token %}
+                <button>로그아웃</button>
+            </form>
+            {{ request.user.username }}
+            {% else %}
+            <a href="{% url 'signup' %}">회원가입</a>
+            <a href="{% url 'login' %}">로그인</a>
+            {% endif %}
+        </div>
         <h1>TodoList</h1>
         <table class="table table-danger table-striped">
             <thead>

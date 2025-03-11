@@ -3,8 +3,21 @@ from todo_list.models import Todo
 
 def todo_list(request):
     todo_list = Todo.objects.all()
-    context = { 'todo_list':todo_list, }
-    return render(request, 'todo_list.html', context)
+
+    # visit을 키값으로 쿠키를 가져오고 존재하지 않으면 0 있으면 +1
+    visits = int(request.COOKIES.get('visits', 0 )) + 1
+
+    request.session['count'] = request.session.get('count',0) + 1
+
+    context = {
+        'todo_list':todo_list,
+        'count':request.session['count'],
+    }
+
+    response = render(request, 'todo_list.html', context)
+    response.set_cookie('visits', visits)
+
+    return response
 
 def todo_info(request, todo_id):
     todo_info = get_object_or_404(Todo, id = todo_id)
