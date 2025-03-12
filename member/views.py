@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import login as django_login, logout as django_logout
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 def sign_up(request):
 
@@ -27,3 +28,13 @@ def login(request):
         'form':form
     }
     return render(request, 'registration/login.html', context)
+
+
+def user_list(request):
+    users = User.objects.all()
+    return render(request, 'user_list.html', {'users':users})
+
+def user_info(request, user_id):
+    user = User.objects.get(pk = user_id)
+    return render(request, 'user_info.html', {'user':user} )
+    # return render(request, 'user_info.html', {'user':users[user_id-1]} )

@@ -1,14 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block content %}
     <h1>
-        id: {{ user.id }}<br>
-        name: {{ user.name }}<br>
-        email: {{ user.email }}<br>
+        번호: {{ user.id }}<br>
+        이름: {{ user.username }}<br>
+        이메일: {{ user.email }}<br>
+        가입일: {{ user.date_joined }}<br>
     </h1>
-</body>
-</html>
+{% endblock %}

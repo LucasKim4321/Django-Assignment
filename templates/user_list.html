@@ -1,14 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block content %}
     {% for user in users %}
         <a href="/users/{{ user.id }}">
-            <h1> {{ user.name }}</h1>
+            <h1> {{ user.username }}</h1>
         </a>
     {% endfor %}
-</body>
-</html>
+{% endblock %}

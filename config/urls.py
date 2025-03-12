@@ -23,16 +23,16 @@ from member import views as member_views
 
 def index(request):
     return redirect('/todo/')
-def user_list(request):
-    return render(request, 'user_list.html', {'users':users})
-def user_info(request, user_id):
-    return render(request, 'user_info.html', {'user':next((user for user in users if user['id'] == user_id), None)} )
-    # return render(request, 'user_info.html', {'user':users[user_id-1]} )
+# def user_list(request):
+#     return render(request, 'user_list.html', {'users':users})
+# def user_info(request, user_id):
+#     return render(request, 'user_info.html', {'user':next((user for user in users if user['id'] == user_id), None)} )
+#     # return render(request, 'user_info.html', {'user':users[user_id-1]} )
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name = 'index'),
-    path('users/', user_list, name = 'user_list'),
-    path('users/<int:user_id>/', user_info, name = 'user_info'),
+    path('users/', member_views.user_list, name = 'user_list'),
+    path('users/<int:user_id>/', member_views.user_info, name = 'user_info'),
     path('todo/', todo_views.todo_list, name = 'todo_list'),
     path('todo/<int:todo_id>/', todo_views.todo_info, name = 'todo_info'),
     path('todo/create/', todo_views.todo_create, name = 'todo_create'),
