@@ -35,6 +35,9 @@ urlpatterns = [
     path('users/<int:user_id>/', user_info, name = 'user_info'),
     path('todo/', todo_views.todo_list, name = 'todo_list'),
     path('todo/<int:todo_id>/', todo_views.todo_info, name = 'todo_info'),
+    path('todo/create/', todo_views.todo_create, name = 'todo_create'),
+    path('todo/<int:todo_id>/update/', todo_views.todo_update, name = 'todo_update'),
+    path('todo/<int:todo_id>/delete/', todo_views.todo_delete, name = 'todo_delete'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', member_views.sign_up, name = 'signup'),
     path('login/', member_views.login, name = 'login')

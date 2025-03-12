@@ -3,13 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        html{ height:100%;}
+        body{ height:100%; padding: 0; margin: 0;}
+        .container{
+            height:100%;
+            display: flex;
+            justify-content: center;
+            {#align-items: center;#}
+            > div {
+                margin-top: 20vh;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>회원가입</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button>회원가입</button>
-    </form>
+<div class="container">
+    <div>
+        <h1>회원가입</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button>회원가입</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>

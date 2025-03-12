@@ -3,12 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        html{ height:100%;}
+        body{ height:100%; padding: 0; margin: 0;}
+        .container{
+            height:100%;
+            display: flex;
+            justify-content: center;
+            {#align-items: center;#}
+            > div {
+                margin-top: 30vh;
+            }
+        }
+    </style>
 </head>
 <body>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button>로그인</button>
-    </form>
+<div class="container">
+    <div>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button>로그인</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>
