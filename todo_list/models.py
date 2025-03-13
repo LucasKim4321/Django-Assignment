@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.urls import reverse
 
 User = get_user_model()
 
@@ -23,6 +24,10 @@ class Todo(models.Model):
     # 관리자 페이지에서 bookmark object 라고 표시되는 사항 변경
     def __str__(self):
         return self.title
+
+    # get_absolute_url은 보통 detail페이지
+    def get_absolute_url(self):
+        return reverse('todo:info', kwargs={'pk':self.pk})
 
     class Meta:
         verbose_name = '할 일'

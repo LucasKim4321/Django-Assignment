@@ -15,14 +15,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, reverse
 from django.shortcuts import render, redirect
 from fake_db import users
 from todo_list import views as todo_views
 from member import views as member_views
 
 def index(request):
-    return redirect('/todo/')
+    # return redirect('/todo/')
+    return redirect(reverse('todo:list'))
 # def user_list(request):
 #     return render(request, 'user_list.html', {'users':users})
 # def user_info(request, user_id):
@@ -33,11 +34,8 @@ urlpatterns = [
     path('', index, name = 'index'),
     path('users/', member_views.user_list, name = 'user_list'),
     path('users/<int:user_id>/', member_views.user_info, name = 'user_info'),
-    path('todo/', todo_views.todo_list, name = 'todo_list'),
-    path('todo/<int:todo_id>/', todo_views.todo_info, name = 'todo_info'),
-    path('todo/create/', todo_views.todo_create, name = 'todo_create'),
-    path('todo/<int:todo_id>/update/', todo_views.todo_update, name = 'todo_update'),
-    path('todo/<int:todo_id>/delete/', todo_views.todo_delete, name = 'todo_delete'),
+    path('fb/', include('todo_list.urls')),
+    path('todo/', include('todo_list.cb_urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', member_views.sign_up, name = 'signup'),
     path('login/', member_views.login, name = 'login')

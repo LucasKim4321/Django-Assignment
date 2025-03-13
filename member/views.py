@@ -22,7 +22,7 @@ def login(request):
 
     if form.is_valid(): # 요구 조건 통과 여부 확인
         django_login(request, form.get_user())  # 로그인을 시도함
-        return redirect(reverse('todo_list'))  # html의 {% url 'blog_list' %} 와 동일
+        return redirect(reverse('todo:list'))  # html의 {% url 'blog_list' %} 와 동일
 
     context = {
         'form':form

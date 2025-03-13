@@ -27,7 +27,8 @@ def todo_list(request):
     context = {
         # 'todo_list':todo_list,
         'count':request.session['count'],
-        'page_object':page_object,
+        'page_obj':page_object,
+        'object_list':page_object.object_list,
     }
 
     response = render(request, 'todo_list.html', context)
@@ -60,7 +61,7 @@ def todo_create(request):
         todo = form.save(commit=False)  # DB에 반영하지 않고 객체만 반환함.
         todo.author = request.user  # 작성자에 로그인된 유저를 넣음
         todo.save()  # DB에 반영
-        return redirect(reverse('todo_info', kwargs={'todo_id':todo.id}))
+        return redirect(reverse('fbv_todo:info', kwargs={'todo_id':todo.id}))
 
     context = {
         'form':form,
@@ -80,7 +81,7 @@ def todo_update(request, todo_id):
     if form.is_valid():
         # form.save() : form에 내용을 DB에 반영하고 해당 데이터의 객체를 반환(리턴)함.
         todo = form.save()  # DB에 반영
-        return redirect(reverse('todo_info', kwargs={'todo_id':todo.id}))
+        return redirect(reverse('fbv_todo:info', kwargs={'todo_id':todo.id}))
 
     context = {
         'todo':todo,
@@ -99,7 +100,7 @@ def todo_delete(request, todo_id):
     todo = get_object_or_404(Todo, pk=todo_id, author=request.user) # pk와 author가 일치하는 데이터만 가져옴
     todo.delete()
 
-    return redirect(reverse('todo_list'))
+    return redirect(reverse('fbv_todo:list'))
 
 
 
