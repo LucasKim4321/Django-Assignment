@@ -1,9 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import Http404, HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from todo_list.models import Todo
+
+from todo_list.forms import CommentForm
+from todo_list.models import Todo, Comment
 
 
 class TodoListView(ListView):
@@ -31,9 +34,26 @@ class TodoListView(ListView):
 #     "object_list": queryset,
 # }
 
-class TodoDetailView(DetailView):
-    model = Todo
+# 기존 디테일 뷰
+# class TodoDetailView(DetailView):
+#     model = Todo
+#     template_name = 'todo_info.html'
+
+# 상세 페이지에서 댓글 페이지 기능을 사용하기 위해 리스트뷰를 사용
+class TodoDetailView(ListView):  # 댓글
+    model = Comment
     template_name = 'todo_info.html'
+    paginate_by = 10
+
+    # pk_url_kwarg = 'todo_id'  # url에서 pk말고 다른 이름으로 id값 가져올 시 설정
+
+    # 블로그 정보 불러옴.
+    def get(self, request, *args, **kwargs):
+        self.object = get_object_or_404(Todo, pk=kwargs.get('todo_pk'))
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return self.model.objects.filter(todo=self.object).prefetch_related('author')
     # pk_url_kwarg = 'todo_id'  # url에서 pk말고 다른 이름으로 id값 가져올 시 설정
 
     # 데이터 처리하는 방법 1
@@ -122,3 +142,26 @@ class TodoDeleteView(LoginRequiredMixin, DeleteView):
     # delete 성공 시 동작
     def get_success_url(self):
         return reverse_lazy('todo:list')
+
+
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form_class = CommentForm
+
+    def get(self, *args, **kwargs):
+        raise Http404
+
+    def form_valid(self, form):
+        todo = self.get_todo()
+        self.object = form.save(commit=False)
+        self.object.author = self.request.user
+        self.object.todo = todo
+        self.object.save()
+        return HttpResponseRedirect(reverse('todo:detail', kwargs={'todo_pk':todo.pk} ))
+
+    def get_todo(self):
+        pk = self.kwargs['todo_pk']
+        todo = get_object_or_404(Todo, pk=pk)
+        return todo
+
+# /comment/create/<int:todo_pk>/

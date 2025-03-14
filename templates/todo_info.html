@@ -28,6 +28,16 @@
         <li class="list-group-item">생성일 : {{ todo.created_at }}</li>
         <li class="list-group-item">수정일 : {{ todo.modified_at }}</li>
     </ul>
+    {% for comment in blog.comment_set.all %}
+    <div>
+        {{ comment.content }}
+        <p class="text-end">
+            <small>{{ comment.created_at | date:'Y-m-d H:i' }} | {{ comment.author.username }}</small>
+        </p>
+    </div>
+{% endfor %}
+
+    {%  include 'pagination.html' with fragment='comment_wrapper' %}
 
 
 {% endblock %}
