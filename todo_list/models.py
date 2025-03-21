@@ -6,6 +6,16 @@ from utils.models import TimestampModel
 User = get_user_model()
 
 class Todo(TimestampModel):
+    CATEGORY_CHOICES = (
+        ('free','자유'),
+        ('travel','여행'),
+        ('cat','고양이'),
+        ('dog','개'),
+    )
+    # blog.objects.filter(category__isnull=true) # Null인 데이터 확인
+    # Blog.objects.filter(category='')  # 비어있는 데이터 확인
+    # Blog.objects.filter(category='').update(category='free')
+    category = models.CharField('카테고리', max_length=20, choices=CATEGORY_CHOICES, default='free')
     title = models.CharField('제목', max_length=50)
     description = models.TextField(verbose_name='설명')
     start_date = models.DateField(verbose_name='시작일')  # "2025-01-25" 이런식으로 입력
@@ -30,7 +40,7 @@ class Todo(TimestampModel):
 
     # get_absolute_url은 보통 detail페이지
     def get_absolute_url(self):
-        return reverse('todo:info', kwargs={'pk':self.pk})
+        return reverse('todo:info', kwargs={'todo_pk':self.pk})
 
     class Meta:
         verbose_name = '할 일'
@@ -46,7 +56,7 @@ class Comment(TimestampModel):
     content = models.CharField('본문', max_length=255)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    def __stf__(self):
+    def __str__(self):
         return f'{self.todo.title} 댓글'
 
     class Meta:

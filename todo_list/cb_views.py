@@ -12,18 +12,19 @@ from todo_list.models import Todo, Comment
 class TodoListView(ListView):
     # model = Todo # object.all()을 사용해 데이터를 가져옴.
     # ordering = ('-created_at',)  # 정렬 옵션
-    queryset = Todo.objects.all().order_by('-created_at')  # 사용자 지정 query
+    # queryset = Todo.objects.all().order_by('-created_at')  # 사용자 지정 query
     template_name = 'todo_list.html'  # render()할 페이지
     paginate_by = 10  # paginator 설정
 
     # 사용자 지정 쿼리셋
     def get_queryset(self):
-        queryset = super().get_queryset()  # 쿼리 셋을 가져옴
+        # queryset = super().get_queryset()  # 쿼리 셋을 가져옴
+        queryset = Todo.objects.filter(author=self.request.user.id).order_by('-created_at')
         q = self.request.GET.get('q')
         if q:
             queryset = queryset.filter(
                 Q(title__icontains=q) |
-                Q(content__icontains = q)
+                Q(description__icontains=q)
             )
         return queryset
 
@@ -44,17 +45,15 @@ class TodoDetailView(ListView):  # 댓글
     model = Comment
     template_name = 'todo_info.html'
     paginate_by = 10
+    # pk_url_kwarg = 'todo_pk'  # url에서 pk말고 다른 이름으로 id값 가져올 시 설정
 
-    # pk_url_kwarg = 'todo_id'  # url에서 pk말고 다른 이름으로 id값 가져올 시 설정
-
-    # 블로그 정보 불러옴.
+    # Todo 정보 불러옴.
     def get(self, request, *args, **kwargs):
         self.object = get_object_or_404(Todo, pk=kwargs.get('todo_pk'))
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
         return self.model.objects.filter(todo=self.object).prefetch_related('author')
-    # pk_url_kwarg = 'todo_id'  # url에서 pk말고 다른 이름으로 id값 가져올 시 설정
 
     # 데이터 처리하는 방법 1
     # 사용자 지정 쿼리셋
@@ -71,21 +70,43 @@ class TodoDetailView(ListView):  # 댓글
     #     return object
 
     # 사용자 지정 context
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['test'] = 'CBV'
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comment_form'] = CommentForm()
+        context['todo'] = self.object
+        return context
+
+    # # post요청시
+    # def post(self, *args, **kwargs):
+    #     comment_form = CommentForm(self.request.POST)
+    #
+    #     if not comment_form.is_valid():
+    #         self.object = self.get_object()
+    #         context = self.get_context_data(object=self.object)
+    #         context['comment_form'] = comment_form
+    #         return self.render_to_response(context)
+    #
+    #     if not self.request.user.is_authenticated:
+    #         raise Http404
+    #
+    #     comment = comment_form.save(commit=False)
+    #     # comment.blog = self.get_object() # 블로그 정보 저장
+    #     comment.blog_id = self.kwargs['pk']  # blog_id 직접 설정
+    #     comment.author = self.request.user
+    #     comment.save()
+    #
+    #     return HttpResponseRedirect( reverse_lazy('blog:detail', kwargs={'pk':self.kwargs['pk']}))
 
 # LoginRequiredMixin  @login_required 와 동일한 기능
 class TodoCreateView(LoginRequiredMixin,CreateView):
     model = Todo
-    template_name = 'todo_create.html'
+    template_name = 'todo_form.html'
     # form 설정
     # fields = '__all__'  # 전체 적용
     fields = ('title', 'description', 'start_date', 'end_date', 'is_completed')  # 원하는 것만 적용
     # success_url = reverse('cb_todo_list') # 서로가 서로를 임포트하는 서큘러 임포트가 발생
     # success_url = reverse_lazy('cb_todo_list')  # create 성공시 동작
-    # success_url = reverse_lazy('cb_todo_info', kwargs={'pk':object.pk})  # 오류남.
+    # success_url = reverse_lazy('cb_todo_info', kwargs={'pk':object.pk})  # 오류남
 
     # 작성자 생성 후 save()동작
     def form_valid(self, form):
@@ -101,12 +122,13 @@ class TodoCreateView(LoginRequiredMixin,CreateView):
 
     # create 성공 시 동작
     def get_success_url(self):
-        return reverse_lazy('todo:info', kwargs={'pk':self.object.pk})
+        return reverse_lazy('todo:info', kwargs={'todo_pk':self.object.pk})
 
 class TodoUpdateView(LoginRequiredMixin, UpdateView):
     model = Todo
-    template_name = 'todo_update.html'
+    template_name = 'todo_form.html'
     fields = ('title', 'description', 'start_date', 'end_date', 'is_completed')  # 원하는 것만 적용
+    pk_url_kwarg = 'todo_pk'  # url에서 pk말고 다른 이름으로 id값 가져올 시 설정
 
     # 로그인 유저와 작성자가 같을 때만 수정 가능하게 처리
     # 1
@@ -127,8 +149,24 @@ class TodoUpdateView(LoginRequiredMixin, UpdateView):
         # return reverse_lazy('cb_todo_info', kwargs={'pk':self.object.pk})
     # get_success_url이 없으면 model의 get_absolute_url찾아서 처리
 
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sub_title'] = '수정'
+        context['btn_name'] = '수정'
+        return context
+
+    # update 성공 시 동작
+    # def get_success_url(self):
+    # return reverse_lazy('cb_blog_detail', kwargs={'pk':self.object.pk})
+    # get_success_url이 없으면 model의 get_absolute_url찾아서 처리
+
 class TodoDeleteView(LoginRequiredMixin, DeleteView):
     model = Todo
+    pk_url_kwarg = 'todo_pk'  # url에서 pk말고 다른 이름으로 id값 가져올 시 설정
 
     # 로그인 유저와 작성자가 같을 때만 삭제 가능하게 처리
     def get_queryset(self):
@@ -144,24 +182,3 @@ class TodoDeleteView(LoginRequiredMixin, DeleteView):
         return reverse_lazy('todo:list')
 
 
-class CommentCreateView(LoginRequiredMixin, CreateView):
-    model = Comment
-    form_class = CommentForm
-
-    def get(self, *args, **kwargs):
-        raise Http404
-
-    def form_valid(self, form):
-        todo = self.get_todo()
-        self.object = form.save(commit=False)
-        self.object.author = self.request.user
-        self.object.todo = todo
-        self.object.save()
-        return HttpResponseRedirect(reverse('todo:detail', kwargs={'todo_pk':todo.pk} ))
-
-    def get_todo(self):
-        pk = self.kwargs['todo_pk']
-        todo = get_object_or_404(Todo, pk=pk)
-        return todo
-
-# /comment/create/<int:todo_pk>/

@@ -1,0 +1,9 @@
+<script>
+    document.querySelectorAll('select, input, textarea').forEach(function(ele) {
+        if (ele.tagName === 'INPUT' && ele.type === 'checkbox') {
+            ele.classList.add('form-check-input');
+        } else {
+            ele.classList.add('form-control');
+        }
+    });
+</script>

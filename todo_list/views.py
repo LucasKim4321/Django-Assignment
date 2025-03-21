@@ -88,7 +88,7 @@ def todo_update(request, todo_id):
         'form':form,
    }
 
-    return render(request, 'todo_update.html', context)
+    return render(request, 'todo_form.html', context)
 
 
 @login_required
