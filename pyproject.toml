@@ -1,19 +1,16 @@
-[project]
-name = "todo-project"
+[tool.poetry]
+name = "chapter-02"
 version = "0.1.0"
 description = ""
-authors = [
-    {name = "Your Name",email = "you@example.com"}
-]
+authors = ["meoyoug <eodyd426@gmail.com>"]
 readme = "README.md"
-requires-python = ">=3.12"
-dependencies = [
-    "django-extensions (>=3.2.3,<4.0.0)",
-    "ipython (>=9.0.2,<10.0.0)",
-    "django-summernote (>=0.8.20.0,<0.9.0.0)"
-]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "^5.0.7"
+django-extensions = "^3.2.3"
 
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
