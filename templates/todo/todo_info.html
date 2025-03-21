@@ -43,10 +43,19 @@
     </div>
     <table class="table">
         {% for key, value in todo.items %}
-            {% if key != 'title' and key != 'id' and key != 'user_id' and key != '_state' and key != '_prefetched_objects_cache'%}
+            {% if key == 'completed_image' and value %}
+                <div>
+                    <img src="http://127.0.0.1:8000/media/{{ value }}" alt="완료 인증 이미지" class="w-100" style="max-height: 400px; object-fit: cover;">
+                </div>
+            {% endif %}
+            {% if key in 'description start_date end_date is_completed created_at updated_at' %} 
                 <tr>
                     <th class="bg-light">{{ key }}</th>
-                    <td>{{ value }}</td>
+                    {% if key == 'description' %}
+                        <td>{{ value | safe }}</td>
+                    {% else %}
+                        <td>{{ value }}</td>
+                    {% endif %}
                 </tr>
             {% endif %}
         {% endfor %}
