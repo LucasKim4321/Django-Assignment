@@ -43,7 +43,9 @@ OWNER_APPS = [
 
 THIRD_PARTY_APPS = [
     'django_extensions',
+    'django_summernote',
 ]
+
 
 # Application definition
 INSTALLED_APPS = DJANGO_APPS + OWNER_APPS + THIRD_PARTY_APPS
@@ -133,6 +135,11 @@ STATIC_DIR = BASE_DIR / 'static'
 STATICFILES_DIRS = [
     STATIC_DIR,
 ]
+
+#media
+# 유저가 올리는 각종 파일들을 저장하는 경로
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # STATIC_ROOT - 배포환경에서 static파일들을 한곳에 모아서 관리할 수 있음.
 STATIC_ROOT = BASE_DIR / '.static_root'
