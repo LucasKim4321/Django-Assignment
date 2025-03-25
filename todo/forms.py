@@ -7,12 +7,13 @@ from todo.models import Todo, Comment
 class TodoForm(forms.ModelForm):
     class Meta:
         model = Todo
-        fields = ['title', 'description', 'start_date', 'end_date']
+        fields = ['title', 'description', 'start_date', 'end_date', 'completed_image']
         widgets = {
             'description': SummernoteWidget(),
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '제목을 입력해주세요.'}),
             'start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'end_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'})
+            'end_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'completed_image': forms.FileInput(attrs={'class': 'form-control'})
         }
 
 

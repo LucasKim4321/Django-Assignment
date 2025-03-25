@@ -28,9 +28,7 @@ class Todo(TimestampModel):
     # python3 manage.py makemigrations 하면 기존 블로그 데이터에 기본값을 줄건지 물어봄.
     # 1번 기본값 주기 선택 후 기존 데이터의 초기값으로 주어질 id값 선택 하면 정상적으로 마이그레이션 됨.
     is_completed = models.BooleanField('완료', default=False)
-    thumbnail = models.ImageField(
-        upload_to='todo/thumbnails', default='todo/no_image/NO-IMAGE.gif', null=True, blank=True
-    )
+    thumbnail = models.ImageField(upload_to='todo/thumbnails', default='todo/no_image/NO-IMAGE.gif', null=True, blank=True)
     completed_image = models.ImageField(upload_to='todo/completed_images', null=True, blank=True)
 
     # TimestampModel에서 created_at, updated_at을 상속받음
