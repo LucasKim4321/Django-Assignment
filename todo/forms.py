@@ -34,6 +34,8 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['message',]
+        # 특정 필드에 TextInput 삽입
+        # Comment 모델이 가지고있는 verbose_name 쓰지 않고 따로 지정
         labels = {
             'message': '내용',
         }

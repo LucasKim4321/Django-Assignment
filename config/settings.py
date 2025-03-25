@@ -67,8 +67,9 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
+        # DIRS, APP_DIRS 둘 다 적용됨. 각 폴더에 같은 이름의 파일이 존재 할 시  DIR경로에 있는 파일이 우선순위가 높음.
+        'DIRS': [BASE_DIR/'templates'], # templates 경로 수동으로 지정, 우선순위가 높음
+        'APP_DIRS': True, # app/templates 경로가 존재할 시 자동 활성화
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -128,14 +129,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
+# js, css파일 적용하기 위해 static폴더 생성 및 설정
 STATIC_URL = 'static/'
 STATIC_DIRS = BASE_DIR / 'static'
 STATICFILES_DIRS = [
     STATIC_DIRS,
 ]
+# STATIC_ROOT - 배포환경에서 static파일들을 한곳에 모아서 관리할 수 있음.
 STATIC_ROOT = BASE_DIR / '.static_root'
 
-# Media files
+# media 경로 설정하기 - static 설정 아래에 추가
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -143,52 +146,61 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # login / logout
+# 장고 기본 로그인 기능 이용
 LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/cbv/todo/'
-LOGOUT_REDIRECT_URL = '/accounts/login/'
+# LOGIN_URL = '/login/'  # 사용자 지정 로그인 기능 이용
+LOGIN_REDIRECT_URL = '/cbv/todo/'  # login 성공시 url 설정
+LOGOUT_REDIRECT_URL = '/accounts/login/'  # logout 성공시 url 설정
 
-# summernote
+# Summernote 설정
 SUMMERNOTE_CONFIG = {
+    # HTML 태그 또는 JS를 수정하지 못하도록 iframe 설정
     'iframe': True,
 
-    # You can put custom Summernote settings
     'summernote': {
-        # As an example, using Summernote Air-mode
+        # airMode 비활성화: 툴바를 항상 표시하도록 설정
         'airMode': False,
 
-        # Change editor size
-        'width': '100%',
-        'height': '480',
+        # 에디터의 사이즈 정의
+        'width': '100%',    # 에디터의 너비를 100%로 설정
+        'height': '480',    # 에디터의 높이를 480px로 설정
 
-        # Toolbar customization
-        # https://summernote.org/deep-dive/#custom-toolbar-popover
+        # 에디터의 툴바 메뉴 정의
         'toolbar': [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'picture']],
-            ['view', ['fullscreen']],
+            ['style', ['style']],                      # 스타일 설정
+            ['font', ['bold', 'underline', 'clear']],  # 글꼴 설정: 굵게, 밑줄, 지우기
+            ['color', ['color']],                      # 색상 설정
+            ['para', ['ul', 'ol', 'paragraph']],       # 문단 설정: 글머리 기호, 번호 매기기, 문단
+            ['table', ['table']],                      # 표 삽입
+            ['insert', ['link', 'picture']],           # 삽입 기능: 링크, 그림
+            ['view', ['fullscreen']],                  # 보기 설정: 전체 화면
         ],
 
-        # Or, explicitly set language/locale for editor
-        'lang': 'ko-KR',
+        # 에디터 언어 정의
+        'lang': 'ko-KR',  # 에디터의 언어를 한국어로 설정
 
+        # 코드미러 설정
         'codemirror': {
-            'mode': 'htmlmixed',
-            'lineNumbers': 'true',
-            # You have to include theme file in 'css' or 'css_for_inplace' before using it.
-            'theme': 'monokai',
+            'mode': 'htmlmixed',     # 코드미러의 모드를 htmlmixed로 설정
+            'lineNumbers': 'true',   # 코드미러에서 줄 번호를 표시
+            'theme': 'monokai',      # 코드미러의 테마를 monokai로 설정
         },
     },
 
-    # Require users to be authenticated for uploading attachments.
+    # 첨부파일 인증 필요 여부 설정
     'attachment_require_authentication': True,
 
-    # You can completely disable the attachment feature.
+    # 첨부파일 기능 비활성화 설정
     'disable_attachment': False,
 
-    # Set to `False` to return attachment paths in relative URIs.
+    # 첨부파일의 절대경로 URI 사용 설정
     'attachment_absolute_uri': True,
 }
+
+
+# django-summernote 설치
+# poetry add django-summernote
+# pillow 설치 : ImageField 사용을 위함
+# poetry add pillow
+# django-cleanup 설치 : ImageField 수정, 삭제시 이미지 파일을 삭제하기 위함
+# poetry add django-cleanup

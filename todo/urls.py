@@ -2,6 +2,9 @@ from django.urls import path
 from todo.cb_views import TodoListView, TodoCreateView, TodoDetailView, TodoUpdateView, TodoDeleteView, \
     CommentDeleteView, CommentUpdateView, CommentCreateView
 
+# 앱이르 설정시  앱이름:패턴이름
+# app_name = 'todo'
+
 urlpatterns = [
     path('todo/', TodoListView.as_view(), name='cbv_todo_list',),
     path('todo/create/', TodoCreateView.as_view(), name='cbv_todo_create'),
