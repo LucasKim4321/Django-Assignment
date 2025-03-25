@@ -152,10 +152,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # login / logout
 # 장고 기본 로그인 기능 이용
-LOGIN_URL = '/accounts/login/'
-# LOGIN_URL = '/login/'  # 사용자 지정 로그인 기능 이용
+# LOGIN_URL = '/accounts/login/'
+LOGIN_URL = '/users/login/'  # 사용자 지정 로그인 기능 이용
 LOGIN_REDIRECT_URL = '/cbv/todo/'  # login 성공시 url 설정
-LOGOUT_REDIRECT_URL = '/accounts/login/'  # logout 성공시 url 설정
+LOGOUT_REDIRECT_URL = '/users/login/'  # logout 성공시 url 설정
 
 # Summernote 설정
 SUMMERNOTE_CONFIG = {
@@ -211,7 +211,7 @@ SUMMERNOTE_CONFIG = {
 # poetry add django-cleanup
 
 # Auth
-AUTH_USER_MODEL = 'member.User'  # 유저 모델 지정
+AUTH_USER_MODEL = 'users.User'  # 유저 모델 지정
 
 # Email
 # from django.core.mail.backends.smtp import EmailBackend

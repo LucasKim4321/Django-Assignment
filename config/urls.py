@@ -1,13 +1,12 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.urls import path, include, reverse
-from django.views import View
-from django.views.generic import TemplateView
 
 from todo.views import todo_list, todo_info, todo_create, todo_update, todo_delete
 from users import views as user_views
+
 
 def index(request):
     # return redirect('/todo/')
@@ -28,7 +27,12 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/login/', user_views.login, name='login'),
     path('accounts/signup/', user_views.sign_up, name='signup'),
-    # CBV URL include
+    # auth
+    path('accounts/', include('django.contrib.auth.urls')),
+    # path('accounts/login/', user_views.login, name='login'),
+    # path('accounts/signup/', user_views.sign_up, name='signup'),
+    path('users/', include('users.urls')),
+    # CBV URL include')
     path('cbv/', include('todo.urls')),
     # summernote URL include
     path('summernote/', include('django_summernote.urls')),

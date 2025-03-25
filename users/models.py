@@ -20,7 +20,7 @@ class UserManger(BaseUserManager):
         user.save(using=self._db)
         return user
 
-
+# 사용자 지정 유저 객체
 class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
