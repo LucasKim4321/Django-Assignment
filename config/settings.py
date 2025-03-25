@@ -9,12 +9,17 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import json
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# 중요 정보를 따로 관리
+with open(BASE_DIR / '.config_secret' / 'secret.json') as f:
+    config_secret_str = f.read()
+
+SECRET = json.loads(config_secret_str)  # json 형태를 딕셔너리 형태로 바꿈
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -204,3 +209,22 @@ SUMMERNOTE_CONFIG = {
 # poetry add pillow
 # django-cleanup 설치 : ImageField 수정, 삭제시 이미지 파일을 삭제하기 위함
 # poetry add django-cleanup
+
+# Auth
+AUTH_USER_MODEL = 'member.User'  # 유저 모델 지정
+
+# Email
+# from django.core.mail.backends.smtp import EmailBackend
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.naver.com' # 네이버 환결설정에서 볼 수 있음.
+EMAIL_USE_TLS = True  # 보안연결
+EMAIL_PORT = 587  # 네이버 메일 환경설정에서 확인 가능
+EMAIL_HOST_USER = SECRET["email"]["user"]
+EMAIL_HOST_PASSWORD =  SECRET["email"]["password"]
+
+# .config_secret 폴더 만들고
+# 폴더에 secret.json 만들고
+# .gitignore에 추가한 후 관리
+# print(SECRET['DB']['HOST'])
+# print(SECRET['DB2']['HOST'])
+# 이렇게 쓸 수도있고 dotenv를 통해 관리할 수도 있음
